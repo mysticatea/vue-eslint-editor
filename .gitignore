@@ -1,0 +1,5 @@
+/.worker-cache
+/dist
+/docs/.vuepress/dist
+/node_modules
+/test.*

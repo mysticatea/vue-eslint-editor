@@ -1,0 +1,9 @@
+root: true
+extends:
+  - plugin:mysticatea/es2015
+  - plugin:mysticatea/+modules
+
+# To use dynamic imports.
+parser: babel-eslint
+parserOptions:
+  parser: babel-eslint

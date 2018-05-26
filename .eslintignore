@@ -1,0 +1,6 @@
+/.worker-cache
+/dist
+/node_modules
+
+!/docs/.vuepress
+/docs/.vuepress/dist
