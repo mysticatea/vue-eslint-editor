@@ -1,12 +1,14 @@
 {
   "name": "vue-eslint-editor",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "An embedded editor component for ESLint.",
   "engines": {
     "node": ">=7.6.0"
   },
-  "main": "dist/eslint-editor.vue",
-  "files": [],
+  "main": "dist/index.vue",
+  "files": [
+    "dist"
+  ],
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^8.2.3",
@@ -33,8 +35,8 @@
     "lint": "eslint docs/.vuepress scripts src test",
     "preversion": "npm test && npm run -s build",
     "postversion": "git push && git push --tags",
-    "pretest": "npm run -s lint",
-    "test": "npm run -s build",
+    "pretest": "npm run -s lint && npm run -s build",
+    "test": "true",
     "watch": "run-p \"build:{index.vue,monaco} -- --watch\" watch:docs",
     "watch:docs": "wait-on dist/monaco.js && vuepress dev docs"
   },
