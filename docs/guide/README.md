@@ -92,6 +92,16 @@ module.exports = {
 }
 ```
 
+### VuePress integrations
+
+VuePress has a bug on SSR builds: [vuepress#451](https://github.com/vuejs/vuepress/issues/451).
+
+Please use the relative path instead of the module path. E.g.,
+
+```js
+import EslintEditor from "../../../node_modules/vue-eslint-editor"
+```
+
 [Linter]: https://eslint.org/docs/developer-guide/nodejs-api#linter
 [MonacoEditor]: https://microsoft.github.io/monaco-editor/
 [Webpack]: https://webpack.js.org/
