@@ -53,7 +53,7 @@ export default {
 ```
 
 ::: tip
-See [playground.vue](https://github.com/mysticatea/vue-eslint-editor/blob/master/docs/.vuepress/components/playground.vue) for a complete example.
+See [playground.vue](https://github.com/mysticatea/vue-eslint-editor/blob/master/docs/.vuepress/components/eslint-playground.vue) for a complete example.
 That is the editor which is in <a :href="$withBase('/')">Home</a>.
 :::
 
