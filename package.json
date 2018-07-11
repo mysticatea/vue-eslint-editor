@@ -35,7 +35,7 @@
     "lint": "eslint docs/.vuepress scripts src --ext .js,.vue",
     "preversion": "npm test && npm run -s build",
     "postversion": "git push && git push --tags",
-    "pretest": "npm run -s lint && npm run -s build",
+    "pretest": "npm run -s build && npm run -s lint",
     "test": "true",
     "watch": "run-p \"build:{index.vue,monaco} -- --watch\" watch:docs",
     "watch:docs": "wait-on dist/monaco.js && vuepress dev docs"
