@@ -35,28 +35,33 @@ export default () => ({
         }
 
         // Build the worker.
-        const bundle = await rollup.rollup({
-            input: id,
-            onwarn(w) {
-                if (w.code !== "THIS_IS_UNDEFINED") {
-                    this.warn(w)
-                }
-            },
-            plugins: [minify(), modBeautifyHtml()],
-        })
+        try {
+            const bundle = await rollup.rollup({
+                input: id,
+                onwarn(w) {
+                    if (w.code !== "THIS_IS_UNDEFINED") {
+                        this.warn(w)
+                    }
+                },
+                plugins: [minify(), modBeautifyHtml()],
+            })
 
-        const { code } = await bundle.generate({
-            format: "iife",
-            name: path.basename(id, ".js").replace(/\./g, ""),
-        })
+            const { code } = await bundle.generate({
+                format: "iife",
+                name: path.basename(id, ".js").replace(/\./g, ""),
+            })
 
-        const content = `export default URL.createObjectURL(new Blob([${JSON.stringify(
-            code
-        )}], { type: "text/javascript" }))`
+            const content = `export default URL.createObjectURL(new Blob([${JSON.stringify(
+                code
+            )}], { type: "text/javascript" }))`
 
-        await fs.ensureDir(path.dirname(cachePath))
-        await fs.writeFile(cachePath, content)
+            await fs.ensureDir(path.dirname(cachePath))
+            await fs.writeFile(cachePath, content)
 
-        return content
+            return content
+        } catch (error) {
+            console.error(path.basename(id), error)
+            throw error
+        }
     },
 })
