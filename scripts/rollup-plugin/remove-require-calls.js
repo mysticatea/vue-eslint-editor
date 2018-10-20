@@ -11,6 +11,6 @@ export default () => ({
         if (path.extname(id) !== ".js") {
             return null
         }
-        return source.replace(/\brequire\(".+?"\)/g, "undefined")
+        return source.replace(/\brequire\(".+?"\)/gu, "undefined")
     },
 })

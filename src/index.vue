@@ -5,11 +5,15 @@
                 <div ref="monaco" class="eslint-editor-monaco" />
                 <div v-if="fix" class="eslint-editor-actions">
                     <label><input v-model="previewFix" type="checkbox">Preview</label>
-                    <button @click="applyAutofix">Apply</button>
+                    <button @click="applyAutofix">
+                        Apply
+                    </button>
                 </div>
             </div>
             <div v-else key="placeholder" class="eslint-editor-swap-container">
-                <code class="eslint-editor-placeholder-code">{{ code }}</code>
+                <code class="eslint-editor-placeholder-code">
+                    {{ code }}
+                </code>
                 <transition name="eslint-editor-fade">
                     <div v-if="monacoLoadingError" key="error" class="eslint-editor-placeholder-error">
                         Failed to load this editor

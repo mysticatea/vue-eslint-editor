@@ -47,7 +47,7 @@ export default () => ({
 
             const { code } = await bundle.generate({
                 format: "iife",
-                name: path.basename(id, ".js").replace(/\./g, ""),
+                name: path.basename(id, ".js").replace(/\./gu, ""),
             })
 
             const content = `export default URL.createObjectURL(new Blob([${JSON.stringify(
