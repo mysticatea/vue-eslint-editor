@@ -6,7 +6,6 @@ import path from "path"
 import fs from "fs-extra"
 import rollup from "rollup"
 import minify from "./minify"
-import modBeautifyHtml from "./mod-beautify-html"
 
 // Caching
 const CACHE_ROOT = path.resolve(".worker-cache")
@@ -43,7 +42,7 @@ export default () => ({
                         console.warn(w.message)
                     }
                 },
-                plugins: [minify(), modBeautifyHtml()],
+                plugins: [minify()],
             })
 
             const { code } = await bundle.generate({
