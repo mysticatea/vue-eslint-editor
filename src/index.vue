@@ -282,59 +282,66 @@ export default {
         },
 
         createEditor() {
-            const { monaco } = this
-            const editor = monaco.editor.create(
-                this.$refs.monaco,
-                Object.assign(
-                    { theme: this.dark ? "vs-dark" : "vs" },
-                    EDITOR_OPTS
-                )
-            )
-            const model = monaco.editor.createModel(this.code, this.language)
+            const { code, dark, format, language, messages, monaco } = this
 
-            model.updateOptions(this.format)
-
-            // Set change event.
+            // Create model.
+            const model = monaco.editor.createModel(code, language)
+            model.updateOptions(format)
             model.onDidChangeContent(() => {
                 this.$emit("input", model.getValue())
                 this.invalidate()
             })
 
-            // Set model.
-            editor.setModel(model)
-
-            // Set markers.
-            this.updateMarkers(editor, this.messages)
+            // Create editor.
+            const editor = monaco.editor.create(
+                this.$refs.monaco,
+                Object.assign(
+                    { model, theme: dark ? "vs-dark" : "vs" },
+                    EDITOR_OPTS
+                )
+            )
+            this.updateMarkers(editor, messages)
 
             return editor
         },
 
         createTwoPaneEditor() {
-            const { monaco } = this
+            const {
+                code,
+                dark,
+                fixedCode,
+                fixedMessages,
+                format,
+                language,
+                messages,
+                monaco,
+            } = this
+
+            // Somehow `createDiffEditor` doesn't have `model` option.
             const editor = monaco.editor.createDiffEditor(
                 this.$refs.monaco,
                 Object.assign(
-                    { theme: this.dark ? "vs-dark" : "vs" },
+                    {
+                        originalEditable: true,
+                        theme: dark ? "vs-dark" : "vs",
+                    },
                     EDITOR_OPTS
                 )
             )
-            const original = monaco.editor.createModel(this.code, this.language)
-            const modified = monaco.editor.createModel(
-                this.fixedCode,
-                this.language
-            )
+            const original = monaco.editor.createModel(code, language)
+            const modified = monaco.editor.createModel(fixedCode, language)
             const leftEditor = editor.getOriginalEditor()
             const rightEditor = editor.getModifiedEditor()
 
             rightEditor.updateOptions({ readOnly: true })
-            original.updateOptions(this.format)
+            original.updateOptions(format)
 
             // Set change event.
             original.onDidChangeContent(() => {
-                const code = original.getValue()
+                const newCode = original.getValue()
 
-                this.fixedCode = code
-                this.$emit("input", code)
+                this.fixedCode = newCode
+                this.$emit("input", newCode)
                 this.invalidate()
             })
 
@@ -342,8 +349,8 @@ export default {
             editor.setModel({ original, modified })
 
             // Set markers.
-            this.updateMarkers(leftEditor, this.messages)
-            this.updateMarkers(rightEditor, this.fixedMessages)
+            this.updateMarkers(leftEditor, messages)
+            this.updateMarkers(rightEditor, fixedMessages)
 
             return editor
         },
@@ -362,7 +369,7 @@ export default {
             )
 
             return {
-                severity: monaco.Severity.Error,
+                severity: monaco.MarkerSeverity.Error,
                 source: "ESLint",
                 message: `${message.message} (${message.ruleId || "FATAL"})`,
                 startLineNumber,

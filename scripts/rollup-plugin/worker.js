@@ -40,7 +40,7 @@ export default () => ({
                 input: id,
                 onwarn(w) {
                     if (w.code !== "THIS_IS_UNDEFINED") {
-                        this.warn(w)
+                        console.warn(w.message)
                     }
                 },
                 plugins: [minify(), modBeautifyHtml()],
