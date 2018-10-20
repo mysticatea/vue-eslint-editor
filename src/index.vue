@@ -178,11 +178,7 @@ export default {
         },
 
         code(value) {
-            const editor = this.codeEditor
-            if (editor != null) {
-                updateValue(editor, value)
-            }
-            this.invalidate()
+            this.updateCode(value)
         },
 
         previewFix() {
@@ -388,6 +384,14 @@ export default {
             monaco.editor.setModelMarkers(model, id, markers)
         },
 
+        updateCode(value) {
+            const editor = this.codeEditor
+            if (editor != null) {
+                updateValue(editor, value)
+            }
+            this.invalidate()
+        },
+
         invalidate() {
             if (this.editor != null && !this.editing) {
                 this.editing = true
@@ -448,15 +452,20 @@ export default {
 
             if (this.requestFix) {
                 this.requestFix = false
-                this.code = this.fixedCode
+                if (this.fixedCode !== this.code) {
+                    this.$emit("input", this.fixedCode)
+                    this.updateCode(this.fixedCode)
+                }
             }
         },
 
         applyAutofix() {
-            if (this.editing) {
+            const { code, fixedCode, editing } = this
+            if (editing) {
                 this.requestFix = true
-            } else {
-                this.code = this.fixedCode
+            } else if (fixedCode !== code) {
+                this.$emit("input", fixedCode)
+                this.updateCode(fixedCode)
             }
         },
     },
