@@ -1,6 +1,6 @@
 {
   "name": "vue-eslint-editor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An embedded editor component for ESLint.",
   "engines": {
     "node": ">=7.6.0"
