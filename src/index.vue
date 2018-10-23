@@ -239,7 +239,7 @@ export default {
             if (monaco != null) {
                 for (const editor of [this.codeEditor, this.fixedCodeEditor]) {
                     if (editor != null) {
-                        monaco.setModelLanguage(editor.getModel(), value)
+                        monaco.editor.setModelLanguage(editor.getModel(), value)
                     }
                 }
             }
