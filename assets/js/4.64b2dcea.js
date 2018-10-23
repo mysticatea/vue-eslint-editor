@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{166:function(n,t,e){"use strict";e.r(t);var s=e(0),l=Object(s.a)({},function(){var n=this.$createElement,t=this._self._c||n;return t("div",{staticClass:"content"},[t("eslint-playground")],1)},[],!1,null,null,null);l.options.__file="README.md";t.default=l.exports}}]);
