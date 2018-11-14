@@ -22,6 +22,10 @@ module.exports = {
         ],
 
         sidebar: ["/", "/guide/", "/api/"],
+
+        serviceWorker: {
+            updatePopup: true,
+        },
     },
 
     evergreen: true,
