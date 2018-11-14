@@ -125,6 +125,16 @@ export default {
             type: String,
             default: "a.js",
         },
+        preprocess: {
+            type: Function,
+            default: null,
+            required: false,
+        },
+        postprocess: {
+            type: Function,
+            default: null,
+            required: false,
+        },
         fix: {
             type: Boolean,
             default: false,
@@ -407,7 +417,14 @@ export default {
         },
 
         lint() {
-            const { codeEditor: editor, config, filename, linter } = this
+            const {
+                codeEditor: editor,
+                config,
+                filename,
+                preprocess,
+                postprocess,
+                linter,
+            } = this
             if (editor == null || linter == null) {
                 return
             }
@@ -416,7 +433,11 @@ export default {
 
             // Lint
             try {
-                this.messages = linter.verify(code, config, { filename })
+                this.messages = linter.verify(code, config, {
+                    filename,
+                    preprocess,
+                    postprocess,
+                })
             } catch (err) {
                 this.messages = [
                     {
