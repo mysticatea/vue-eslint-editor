@@ -120,6 +120,32 @@ The language option object for [Monaco Editor].
 
 You can change syntax highlights and language services in order to play ESLint with custom parsers.
 
+### postprocess
+
+```html
+<vue-eslint-editor :postprocess="postprocess" />
+```
+
+- **Type:** `((messages: Message[][], filename: string) => Message[]) | undefined`
+- **Default value:** `undefined`
+
+The post-process function.
+
+This function is given to the third argument of `Linter#verify()` method.
+
+### preprocess
+
+```html
+<vue-eslint-editor :preprocess="preprocess" />
+```
+
+- **Type:** `((code: string, filename: string) => string[]) | undefined`
+- **Default value:** `undefined`
+
+The pre-process function.
+
+This function is given to the third argument of `Linter#verify()` method.
+
 ## 🔔 Events
 
 ### input
