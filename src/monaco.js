@@ -22,9 +22,9 @@ import "monaco-editor/esm/vs/editor/contrib/wordOperations/wordOperations"
 import "monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp"
 import "monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens"
 import "monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard"
-import "monaco-editor/esm/vs/editor/standalone/browser/quickOpen/quickOutline.js"
-import "monaco-editor/esm/vs/editor/standalone/browser/quickOpen/gotoLine.js"
-import "monaco-editor/esm/vs/editor/standalone/browser/quickOpen/quickCommand.js"
+import "monaco-editor/esm/vs/editor/standalone/browser/quickOpen/quickOutline"
+import "monaco-editor/esm/vs/editor/standalone/browser/quickOpen/gotoLine"
+import "monaco-editor/esm/vs/editor/standalone/browser/quickOpen/quickCommand"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
 
 import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution"
@@ -36,10 +36,10 @@ import "monaco-editor/esm/vs/language/css/monaco.contribution"
 import "monaco-editor/esm/vs/language/json/monaco.contribution"
 import "monaco-editor/esm/vs/language/html/monaco.contribution"
 
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker.js"
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker"
 import cssWorker from "monaco-editor/esm/vs/language/css/css.worker"
 import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker"
-import typescriptWorker from "monaco-editor/esm/vs/language/typescript/ts.worker.js"
+import typescriptWorker from "monaco-editor/esm/vs/language/typescript/ts.worker"
 
 const workerURL = {
     css: cssWorker,
