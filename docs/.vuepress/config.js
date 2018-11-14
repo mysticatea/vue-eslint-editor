@@ -1,15 +1,6 @@
 /*eslint-env node */
 "use strict"
 
-// const path = require("path")
-// const fs = require("fs")
-
-// const dist = path.resolve(__dirname, "../../dist")
-// const vee = path.resolve(__dirname, "components/vue-eslint-editor")
-// if (!fs.existsSync(vee)) {
-//     fs.symlinkSync(dist, vee, "junction")
-// }
-
 module.exports = {
     base: "/vue-eslint-editor/",
     title: "vue-eslint-editor",
