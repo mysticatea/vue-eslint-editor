@@ -1,8 +1,8 @@
 <template>
     <eslint-editor
+        v-model="code"
         :linter="linter"
         :config="config"
-        :code="code"
         class="eslint-playground"
         dark
         fix
@@ -102,13 +102,13 @@ new Vue({
                     "use-isnan": "error",
                     "valid-typeof": "error",
 
-                    // few style rules.
+                    // a few style rules.
                     semi: "error",
                     quotes: "error",
                     indent: ["error", 4],
                 },
                 parserOptions: {
-                    ecmaVersion: 2018,
+                    ecmaVersion: 2020,
                     sourceType: "module",
                 },
             },
