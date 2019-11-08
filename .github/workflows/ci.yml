@@ -29,6 +29,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Install Node.js
         uses: actions/setup-node@v1
         with:
           node: 12.x
