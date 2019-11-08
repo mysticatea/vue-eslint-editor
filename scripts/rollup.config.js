@@ -8,13 +8,15 @@ import resolve from "./rollup-plugin/resolve"
 import worker from "./rollup-plugin/worker"
 
 export default {
-    experimentalDynamicImport: true,
     input: "./src/monaco.js",
-    onwarn() {
-        // Ignore.
+    onwarn(w) {
+        if (w.code === "THIS_IS_UNDEFINED") {
+            return
+        }
+        console.warn("%s", w)
     },
     output: {
-        file: "./dist/monaco.js",
+        dir: "./dist",
         format: "es",
     },
     plugins: [css(), removeRequireCalls(), resolve(), worker()],

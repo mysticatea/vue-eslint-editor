@@ -21,11 +21,11 @@ export default () => {
             return ""
         },
 
-        transformBundle(source) {
+        renderChunk(source) {
             return `import "./monaco.css";\n${source}`
         },
 
-        async onwrite() {
+        async writeBundle() {
             await fs.ensureDir("dist")
             await fs.writeFile(
                 "dist/monaco.css",
