@@ -3,7 +3,7 @@
   "version": "0.1.4",
   "description": "An embedded editor component for ESLint.",
   "engines": {
-    "node": ">=7.6.0"
+    "node": ">=10.0.0"
   },
   "main": "dist/index.vue",
   "files": [
@@ -11,11 +11,11 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "@mysticatea/eslint-plugin": "^7.0.0",
-    "babel-eslint": "^10.0.1",
+    "@mysticatea/eslint-plugin": "^12.0.0",
     "cpx": "^1.5.0",
-    "eslint": "^5.9.0",
-    "eslint4b": "^5.9.0",
+    "eslint": "^6.6.0",
+    "eslint4b": "^6.6.0",
+    "espree": "^6.1.2",
     "fs-extra": "^7.0.1",
     "monaco-editor": "^0.15.6",
     "npm-run-all": "^4.1.3",

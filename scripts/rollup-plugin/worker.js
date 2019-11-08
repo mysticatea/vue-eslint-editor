@@ -51,7 +51,7 @@ export default () => ({
             })
 
             const content = `export default URL.createObjectURL(new Blob([${JSON.stringify(
-                code
+                code,
             )}], { type: "text/javascript" }))`
 
             await fs.ensureDir(path.dirname(cachePath))

@@ -1,10 +1,17 @@
 <template>
-    <div :class="{'eslint-editor-dark':dark}" class="eslint-editor-root">
+    <div :class="{ 'eslint-editor-dark': dark }" class="eslint-editor-root"><!-- eslint-disable-line @mysticatea/prettier, @mysticatea/vue/comma-dangle, @mysticatea/vue/multiline-html-element-content-newline -->
         <transition name="eslint-editor-fade" @before-enter="fadeIn">
-            <div v-if="monaco" key="editor" class="eslint-editor-swap-container">
+            <div
+                v-if="monaco"
+                key="editor"
+                class="eslint-editor-swap-container"
+            >
                 <div ref="monaco" class="eslint-editor-monaco" />
                 <div v-if="fix" class="eslint-editor-actions">
-                    <label><input v-model="previewFix" type="checkbox">Preview</label>
+                    <label>
+                        <input v-model="previewFix" type="checkbox"><!-- eslint-disable-line @mysticatea/prettier -->
+                        Preview
+                    </label>
                     <button @click="applyAutofix">
                         Apply
                     </button>
@@ -15,12 +22,22 @@
                     {{ code }}
                 </code>
                 <transition name="eslint-editor-fade">
-                    <div v-if="monacoLoadingError" key="error" class="eslint-editor-placeholder-error">
+                    <div
+                        v-if="monacoLoadingError"
+                        key="error"
+                        class="eslint-editor-placeholder-error"
+                    >
                         Failed to load this editor
                     </div>
-                    <div v-else key="loading" class="eslint-editor-placeholder-loading">
+                    <div
+                        v-else
+                        key="loading"
+                        class="eslint-editor-placeholder-loading"
+                    >
                         <div class="eslint-editor-placeholder-loading-icon">
-                            <div /><div /><div />
+                            <div />
+                            <div />
+                            <div />
                         </div>
                         <div class="eslint-editor-placeholder-loading-message">
                             Now loading...
@@ -119,7 +136,6 @@ export default {
         },
         dark: {
             type: Boolean,
-            default: false,
         },
         filename: {
             type: String,
@@ -137,7 +153,6 @@ export default {
         },
         fix: {
             type: Boolean,
-            default: false,
         },
         format: {
             type: Object,
@@ -263,7 +278,7 @@ export default {
             },
             error => {
                 this.monacoLoadingError = error
-            }
+            },
         )
     },
 
@@ -303,13 +318,11 @@ export default {
             })
 
             // Create editor.
-            const editor = monaco.editor.create(
-                this.$refs.monaco,
-                Object.assign(
-                    { model, theme: dark ? "vs-dark" : "vs" },
-                    EDITOR_OPTS
-                )
-            )
+            const editor = monaco.editor.create(this.$refs.monaco, {
+                model,
+                theme: dark ? "vs-dark" : "vs",
+                ...EDITOR_OPTS,
+            })
             this.updateMarkers(editor, messages)
 
             return editor
@@ -328,16 +341,11 @@ export default {
             } = this
 
             // Somehow `createDiffEditor` doesn't have `model` option.
-            const editor = monaco.editor.createDiffEditor(
-                this.$refs.monaco,
-                Object.assign(
-                    {
-                        originalEditable: true,
-                        theme: dark ? "vs-dark" : "vs",
-                    },
-                    EDITOR_OPTS
-                )
-            )
+            const editor = monaco.editor.createDiffEditor(this.$refs.monaco, {
+                originalEditable: true,
+                theme: dark ? "vs-dark" : "vs",
+                ...EDITOR_OPTS,
+            })
             const original = monaco.editor.createModel(code, language)
             const modified = monaco.editor.createModel(fixedCode, language)
             const leftEditor = editor.getOriginalEditor()
@@ -371,11 +379,11 @@ export default {
             const startColumn = ensurePositiveInt(message.column, 1)
             const endLineNumber = ensurePositiveInt(
                 message.endLine,
-                startLineNumber
+                startLineNumber,
             )
             const endColumn = ensurePositiveInt(
                 message.endColumn,
-                startColumn + 1
+                startColumn + 1,
             )
 
             return {

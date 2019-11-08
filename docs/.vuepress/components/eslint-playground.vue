@@ -10,6 +10,7 @@
 </template>
 
 <script>
+//eslint-disable-next-line @mysticatea/node/no-missing-import
 import EslintEditor from "../../../dist/index.vue"
 
 export default {

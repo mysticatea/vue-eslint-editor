@@ -2,6 +2,7 @@
  * @author Toru Nagashima <https://github.com/mysticatea>
  * See LICENSE file in root directory for full license.
  */
+/*globals require, __dirname */
 import path from "path"
 
 export default () => ({

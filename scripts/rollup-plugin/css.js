@@ -29,7 +29,7 @@ export default () => {
             await fs.ensureDir("dist")
             await fs.writeFile(
                 "dist/monaco.css",
-                Array.from(contents.values()).join("\n\n")
+                Array.from(contents.values()).join("\n\n"),
             )
         },
     }
