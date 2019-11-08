@@ -2,7 +2,7 @@
 
 ## 💿 Installation
 
-Use [npm] to install.
+Use [npm] or a compatible tool to install.
 
 ```bash
 npm install vue-eslint-editor
@@ -90,16 +90,6 @@ module.exports = {
         new VueLoaderPlugin(),
     ],
 }
-```
-
-### VuePress integrations
-
-VuePress has a bug on SSR builds: [vuepress#451](https://github.com/vuejs/vuepress/issues/451).
-
-Please use the relative path instead of the module path. E.g.,
-
-```js
-import EslintEditor from "../../../node_modules/vue-eslint-editor"
 ```
 
 [Linter]: https://eslint.org/docs/developer-guide/nodejs-api#linter
