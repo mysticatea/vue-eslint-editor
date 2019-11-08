@@ -13,7 +13,7 @@ This package provides [Vue.js] component of a code editor for [ESLint] playgroun
 
 ## 📖 Usage
 
-See [documentation](https://mysticatea.github.io/vue-eslint-editor/).
+See [documentation](http://vue-eslint-editor.mysticatea.dev/).
 
 ## 📰 Changelog
 
