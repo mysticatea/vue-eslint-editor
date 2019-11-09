@@ -53,9 +53,9 @@ export default () => ({
                 throw new Error(`Multiple chunks were generated for '${id}'`)
             }
 
-            const content = `export default URL.createObjectURL(new Blob([${JSON.stringify(
-                output[0].code,
-            )}], { type: "text/javascript" }))`
+            const nameStr = JSON.stringify(path.basename(id))
+            const codeStr = JSON.stringify(output[0].code)
+            const content = `export const worker = new Worker(URL.createObjectURL(new Blob([${codeStr}], { type: "text/javascript" })), { name: ${nameStr} })`
 
             await fs.ensureDir(path.dirname(cachePath))
             await fs.writeFile(cachePath, content)

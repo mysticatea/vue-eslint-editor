@@ -36,24 +36,69 @@ import "monaco-editor/esm/vs/language/css/monaco.contribution"
 import "monaco-editor/esm/vs/language/json/monaco.contribution"
 import "monaco-editor/esm/vs/language/html/monaco.contribution"
 
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker"
-import cssWorker from "monaco-editor/esm/vs/language/css/css.worker"
-import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker"
-import typescriptWorker from "monaco-editor/esm/vs/language/typescript/ts.worker"
-
-const workerURL = {
-    css: cssWorker,
-    html: htmlWorker,
-    javascript: typescriptWorker,
-    get typescript() {
-        return this.javascript
-    },
-}
-Object.setPrototypeOf(workerURL, null)
+const workerPromises = Object.create(null)
+const workers = Object.create(null)
 
 /*globals window */
 window.MonacoEnvironment = {
-    getWorkerUrl: (_, label) => workerURL[label] || editorWorker,
+    getWorker(_, label) {
+        if (workers[label]) {
+            return workers[label]
+        }
+        if (workers.$editor) {
+            return workers.$editor
+        }
+        throw new Error(`The language worker '${label}' was not found`)
+    },
 }
 
-export default monaco
+export function loadLanguage(label) {
+    if (workers[label]) {
+        return Promise.resolve()
+    }
+
+    switch (label) {
+        case "javascript":
+        case "typescript":
+            if (!workerPromises[label]) {
+                workerPromises[label] = import(
+                    "monaco-editor/esm/vs/language/typescript/ts.worker"
+                ).then(({ worker }) => {
+                    workers[label] = worker
+                })
+            }
+            return workerPromises[label]
+
+        case "html":
+            if (!workerPromises[label]) {
+                workerPromises[label] = import(
+                    "monaco-editor/esm/vs/language/html/html.worker"
+                ).then(({ worker }) => {
+                    workers[label] = worker
+                })
+            }
+            return workerPromises[label]
+
+        case "css":
+            if (!workerPromises[label]) {
+                workerPromises[label] = import(
+                    "monaco-editor/esm/vs/language/css/css.worker"
+                ).then(({ worker }) => {
+                    workers[label] = worker
+                })
+            }
+            return workerPromises[label]
+
+        default:
+            if (!workerPromises.$editor) {
+                workerPromises.$editor = import(
+                    "monaco-editor/esm/vs/editor/editor.worker"
+                ).then(({ worker }) => {
+                    workers.$editor = worker
+                })
+            }
+            return workerPromises.$editor
+    }
+}
+
+export { monaco }

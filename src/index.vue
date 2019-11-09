@@ -168,6 +168,7 @@ export default {
         return {
             monaco: null,
             monacoLoadingError: null,
+            loadLanguage: null,
             editor: null,
             editing: false,
             messages: [],
@@ -258,26 +259,46 @@ export default {
         },
 
         language(value) {
-            const { monaco } = this
-            if (monaco != null) {
+            const { monaco, loadLanguage } = this
+            if (monaco == null) {
+                // Skip because the initialization logic does this.
+                return
+            }
+
+            ;(async () => {
+                // Load the language editor of the current language.
+                await loadLanguage(value)
+
+                // Skip if the language is not latest
+                if (value !== this.language) {
+                    return
+                }
+
+                // Set the language to the current editors.
                 for (const editor of [this.codeEditor, this.fixedCodeEditor]) {
                     if (editor != null) {
                         monaco.editor.setModelLanguage(editor.getModel(), value)
                     }
                 }
-            }
+            })().catch(error => {
+                console.error("Failed to set the language '%s':", value, error)
+            })
         },
     },
 
     mounted() {
-        import("./monaco").then(
-            ({ default: monaco }) => {
-                this.monaco = monaco
-            },
-            error => {
-                this.monacoLoadingError = error
-            },
-        )
+        ;(async () => {
+            // Load the monaco editor lazily.
+            const { monaco, loadLanguage } = await import("./monaco")
+            // Load the language editor of the current language.
+            await loadLanguage(this.language)
+            // Finish loading.
+            this.monaco = monaco
+            this.loadLanguage = loadLanguage
+        })().catch(error => {
+            console.error("Failed to load Monaco editor:", error)
+            this.monacoLoadingError = error
+        })
     },
 
     beforeDestroy() {

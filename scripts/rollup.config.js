@@ -16,6 +16,7 @@ export default {
         console.warn("%s", w)
     },
     output: {
+        chunkFileNames: "[name].js",
         dir: "./dist",
         format: "es",
     },
