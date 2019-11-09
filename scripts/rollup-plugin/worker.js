@@ -45,13 +45,16 @@ export default () => ({
                 plugins: [minify()],
             })
 
-            const { code } = await bundle.generate({
+            const { output } = await bundle.generate({
                 format: "iife",
                 name: path.basename(id, ".js").replace(/\./gu, ""),
             })
+            if (output.length > 1) {
+                throw new Error(`Multiple chunks were generated for '${id}'`)
+            }
 
             const content = `export default URL.createObjectURL(new Blob([${JSON.stringify(
-                code,
+                output[0].code,
             )}], { type: "text/javascript" }))`
 
             await fs.ensureDir(path.dirname(cachePath))
