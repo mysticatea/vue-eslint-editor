@@ -3,8 +3,14 @@
 module.exports = {
     title: "vue-eslint-editor",
     description: "A code editor component to play ESLint.",
-    head: [["link", { rel: "icon", href: "favicon.png" }]],
-    serviceWorker: true,
+    evergreen: true,
+
+    plugins: {
+        "@vuepress/pwa": {
+            serviceWorker: true,
+            updatePopup: true,
+        },
+    },
 
     themeConfig: {
         repo: "mysticatea/vue-eslint-editor",
@@ -12,18 +18,10 @@ module.exports = {
         docsDir: "docs",
         docsBranch: "master",
         editLinks: true,
-
         nav: [
             { text: "Guide", link: "/guide/" },
             { text: "API Reference", link: "/api/" },
         ],
-
         sidebar: ["/", "/guide/", "/api/"],
-
-        serviceWorker: {
-            updatePopup: true,
-        },
     },
-
-    evergreen: true,
 }
