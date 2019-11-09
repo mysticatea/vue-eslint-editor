@@ -18,9 +18,7 @@
                 </div>
             </div>
             <div v-else key="placeholder" class="eslint-editor-swap-container">
-                <code class="eslint-editor-placeholder-code">
-                    {{ code }}
-                </code>
+                <code class="eslint-editor-placeholder-code">{{ code }}</code>
                 <transition name="eslint-editor-fade">
                     <div
                         v-if="monacoLoadingError"
