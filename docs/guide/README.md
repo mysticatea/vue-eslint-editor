@@ -76,10 +76,17 @@ module.exports = {
     },
     module: {
         rules: [
+            // For `vue-eslint-editor/dist/monaco.css`
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"],
             },
+            // For `vue-eslint-editor/dist/codicon.ttf`
+            {
+                test: /\.ttf$/,
+                loader: "file-loader",
+            },
+            // For `vue-eslint-editor/dist/index.vue`
             {
                 test: /\.vue$/,
                 loader: "vue-loader",
