@@ -58,6 +58,7 @@ const EDITOR_OPTS = {
     minimap: { enabled: false },
     renderControlCharacters: true,
     renderIndentGuides: true,
+    renderValidationDecorations: "on",
     renderWhitespace: "boundary",
     scrollBeyondLastLine: false,
 }
@@ -235,8 +236,6 @@ export default {
             }
         },
 
-        // But it's not shown.
-        // See https://github.com/mysticatea/vue-eslint-demo/issues/5
         fixedMessages(value) {
             const editor = this.fixedCodeEditor
             if (editor != null) {
