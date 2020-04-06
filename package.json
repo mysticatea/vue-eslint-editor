@@ -33,7 +33,7 @@
     "build:index.vue": "cpx src/*.vue dist/",
     "build:monaco": "rollup -c scripts/rollup.config.js",
     "build:docs": "vuepress build docs",
-    "lint": "eslint docs/.vuepress scripts src --ext .js,.vue",
+    "lint": "eslint docs/.vuepress scripts src .eslintrc.js --ext .js,.vue",
     "preversion": "npm test && npm run -s build",
     "postversion": "git push && git push --tags",
     "test": "npm run -s build",

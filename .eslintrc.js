@@ -9,21 +9,28 @@ module.exports = {
         {
             files: [
                 "docs/.vuepress/components/**/*.{js,vue}",
-                "src/**/*.{js,vue}"
+                "src/**/*.{js,vue}",
             ],
-            extends: "plugin:@mysticatea/+modules"
+            extends: "plugin:@mysticatea/+modules",
+        },
+        // Suppress `@mysticatea/node/no-missing-import` error for `"../../../dist/index.vue"`
+        {
+            files: "docs/.vuepress/components/eslint-playground.vue",
+            rules: {
+                "@mysticatea/node/no-missing-import": "off",
+            },
         },
         // Use the latest espree in vue files.
         {
             files: "**/*.vue",
             parserOptions: {
-                parser: require.resolve("espree")
-            }
+                parser: require.resolve("espree"),
+            },
         },
         // Use Node.js stuff in config.js.
         {
             files: "docs/.vuepress/config.js",
-            extends: "plugin:@mysticatea/+node"
+            extends: "plugin:@mysticatea/+node",
         },
-    ]
+    ],
 }
