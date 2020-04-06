@@ -55,5 +55,6 @@
   "bugs": {
     "url": "https://github.com/mysticatea/vue-eslint-editor/issues"
   },
-  "homepage": "https://github.com/mysticatea/vue-eslint-editor#readme"
+  "homepage": "https://github.com/mysticatea/vue-eslint-editor#readme",
+  "funding": "https://github.com/sponsors/mysticatea"
 }
