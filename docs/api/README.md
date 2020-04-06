@@ -52,12 +52,17 @@ This config object is given to the second argument of `Linter#verify()` method.
 Define parser options and rules.
 
 ::: warning NOTE
-Mind you cannot use `extends` and `env` settings in this config.
-You have to use `globals` and `parserOptions` settings instead.
-See also:
+Use `Linter#defineParser()` method before you use the `parser` field. Otherwise, the [Linter] object throws a not-found error.
+:::
 
-- [eslint/conf/environments.js](https://github.com/eslint/eslint/blob/master/conf/environments.js).
-- [eslint/conf/eslint-recommended.js](https://github.com/eslint/eslint/blob/master/conf/eslint-recommended.js).
+::: warning NOTE
+Mind you cannot use `env`, `extends`, `overrides`, `plugins`, and `processor` fields in this config. This is a limitation of [Linter] class.
+
+- Use `globals` and `parserOptions` fields instead of the `env` field.
+- Merge your configurations manually instead of the `extends` field.
+- Switch your configuration for each file manually instead of the `overrides` field.
+- Use `Linter#defineRule()` method with every rule of plugins instead of the `plugins` field.
+- Use [preprocess](#preprocess) and [postprocess](#postprocess) attributes instead of the `processor` field.
 :::
 
 ### dark
@@ -94,7 +99,7 @@ You can customize the filename with this property.
 - **Type:** `boolean`
 - **Default value:** `false`
 
-The flag to show fixed code [side by side](https://microsoft.github.io/monaco-editor/playground.html#creating-the-diffeditor-multi-line-example).
+The flag to show the "Preview" button that shows fixed code [side by side](https://microsoft.github.io/monaco-editor/playground.html#creating-the-diffeditor-multi-line-example).
 
 ### format
 
