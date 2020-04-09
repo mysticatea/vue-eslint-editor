@@ -452,7 +452,6 @@ export default {
             model.updateOptions(format)
             model.onDidChangeContent(() => {
                 this.$emit("input", model.getValue())
-                this.editorMessageMap.clear()
                 this.invalidate()
             })
 
@@ -597,6 +596,7 @@ export default {
             if (editor == null || linter == null) {
                 return
             }
+            this.editorMessageMap.clear()
             const model = editor.getModel()
             const code = model.getValue()
 
