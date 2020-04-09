@@ -229,6 +229,7 @@ export default {
             previewFix: false,
             requestFix: false,
             editorMessageMap: new Map(),
+            codeActionProviderDisposable: null,
         }
     },
 
@@ -388,7 +389,8 @@ export default {
                         monaco.editor.setModelLanguage(editor.getModel(), value)
                     }
                 }
-                this.monaco.languages.registerCodeActionProvider(
+                dispose(this.codeActionProviderDisposable)
+                this.codeActionProviderDisposable = this.monaco.languages.registerCodeActionProvider(
                     this.language,
                     this.codeActionProvider,
                 )
@@ -407,8 +409,7 @@ export default {
             // Finish loading.
             this.monaco = monaco
             this.loadLanguage = loadLanguage
-
-            monaco.languages.registerCodeActionProvider(
+            this.codeActionProviderDisposable = monaco.languages.registerCodeActionProvider(
                 this.language,
                 this.codeActionProvider,
             )
@@ -420,6 +421,7 @@ export default {
 
     beforeDestroy() {
         dispose(this.editor)
+        dispose(this.codeActionProviderDisposable)
         this.$refs.monaco.innerHTML = ""
         this.editor = null
     },
