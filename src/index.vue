@@ -110,6 +110,57 @@ function dispose(x) {
     }
 }
 
+/**
+ * Computes the key string from the given marker.
+ * @param {import('monaco-editor').editor.IMarkerData} marker marker
+ * @returns {string} the key string
+ */
+function computeKey(marker) {
+    const code =
+        (typeof marker.code === "string"
+            ? marker.code
+            : marker.code && marker.code.value) || ""
+    return `[${marker.startLineNumber},${marker.startColumn},${marker.endLineNumber},${marker.endColumn}]-${code}`
+}
+
+/**
+ * Create quickfix code action.
+ * @param {string} title title
+ * @param {import('monaco-editor').editor.IMarkerData} marker marker
+ * @param {import('monaco-editor').editor.ITextModel} model model
+ * @param { { range: [number, number], text: string } } fix fix data
+ * @returns {import('monaco-editor').languages.CodeAction} CodeAction
+ */
+function createQuickfixCodeAction(title, marker, model, fix) {
+    const start = model.getPositionAt(fix.range[0])
+    const end = model.getPositionAt(fix.range[1])
+    /**
+     * @type {import('monaco-editor').IRange}
+     */
+    const editRange = {
+        startLineNumber: start.lineNumber,
+        startColumn: start.column,
+        endLineNumber: end.lineNumber,
+        endColumn: end.column,
+    }
+    return {
+        title,
+        diagnostics: [marker],
+        kind: "quickfix",
+        edit: {
+            edits: [
+                {
+                    resource: model.uri,
+                    edit: {
+                        range: editRange,
+                        text: fix.text,
+                    },
+                },
+            ],
+        },
+    }
+}
+
 export default {
     name: "ESLintEditor",
 
@@ -177,6 +228,8 @@ export default {
             fixedMessages: [],
             previewFix: false,
             requestFix: false,
+            editorMessageMap: new Map(),
+            codeActionProviderDisposable: null,
         }
     },
 
@@ -198,6 +251,63 @@ export default {
                 return editor.getModifiedEditor()
             }
             return null
+        },
+
+        /**
+         * @returns {import('monaco-editor').languages.CodeActionProvider}
+         */
+        codeActionProvider() {
+            return {
+                provideCodeActions: (model, _range, context) => {
+                    const { editorMessageMap } = this
+                    const messageMap = editorMessageMap.get(model.uri)
+                    if (context.only !== "quickfix" || !messageMap) {
+                        return {
+                            actions: [],
+                            dispose() {
+                                /* nop */
+                            },
+                        }
+                    }
+
+                    const actions = []
+                    for (const marker of context.markers) {
+                        const message = messageMap.get(computeKey(marker))
+                        if (!message) {
+                            continue
+                        }
+                        if (message.fix) {
+                            actions.push(
+                                createQuickfixCodeAction(
+                                    `Fix this ${message.ruleId} problem`,
+                                    marker,
+                                    model,
+                                    message.fix,
+                                ),
+                            )
+                        }
+                        if (message.suggestions) {
+                            for (const suggestion of message.suggestions) {
+                                actions.push(
+                                    createQuickfixCodeAction(
+                                        `${suggestion.desc} (${message.ruleId})`,
+                                        marker,
+                                        model,
+                                        suggestion.fix,
+                                    ),
+                                )
+                            }
+                        }
+                    }
+
+                    return {
+                        actions,
+                        dispose() {
+                            /* nop */
+                        },
+                    }
+                },
+            }
         },
     },
 
@@ -253,7 +363,7 @@ export default {
         messages(value) {
             const editor = this.codeEditor
             if (editor != null) {
-                this.updateMarkers(editor, value)
+                this.updateMarkers(editor, value, true)
             }
         },
 
@@ -279,6 +389,11 @@ export default {
                         monaco.editor.setModelLanguage(editor.getModel(), value)
                     }
                 }
+                dispose(this.codeActionProviderDisposable)
+                this.codeActionProviderDisposable = this.monaco.languages.registerCodeActionProvider(
+                    this.language,
+                    this.codeActionProvider,
+                )
             })().catch(error => {
                 console.error("Failed to set the language '%s':", value, error)
             })
@@ -294,6 +409,10 @@ export default {
             // Finish loading.
             this.monaco = monaco
             this.loadLanguage = loadLanguage
+            this.codeActionProviderDisposable = monaco.languages.registerCodeActionProvider(
+                this.language,
+                this.codeActionProvider,
+            )
         })().catch(error => {
             console.error("Failed to load Monaco editor:", error)
             this.monacoLoadingError = error
@@ -302,6 +421,7 @@ export default {
 
     beforeDestroy() {
         dispose(this.editor)
+        dispose(this.codeActionProviderDisposable)
         this.$refs.monaco.innerHTML = ""
         this.editor = null
     },
@@ -341,7 +461,7 @@ export default {
                 theme: dark ? "vs-dark" : "vs",
                 ...EDITOR_OPTS,
             })
-            this.updateMarkers(editor, messages)
+            this.updateMarkers(editor, messages, true)
 
             return editor
         },
@@ -385,14 +505,17 @@ export default {
             editor.setModel({ original, modified })
 
             // Set markers.
-            this.updateMarkers(leftEditor, messages)
+            this.updateMarkers(leftEditor, messages, true)
             this.updateMarkers(rightEditor, fixedMessages)
 
             return editor
         },
 
         messageToMarker(message) {
-            const { monaco } = this
+            const { monaco, linter } = this
+            const rule = message.ruleId && linter.getRules().get(message.ruleId)
+            const docUrl =
+                rule && rule.meta && rule.meta.docs && rule.meta.docs.url
             const startLineNumber = ensurePositiveInt(message.line, 1)
             const startColumn = ensurePositiveInt(message.column, 1)
             const endLineNumber = ensurePositiveInt(
@@ -404,10 +527,15 @@ export default {
                 startColumn + 1,
             )
 
+            const code = docUrl
+                ? { value: message.ruleId, link: docUrl }
+                : message.ruleId || "FATAL"
+
             return {
+                code,
                 severity: monaco.MarkerSeverity.Error,
                 source: "ESLint",
-                message: `${message.message} (${message.ruleId || "FATAL"})`,
+                message: message.message,
                 startLineNumber,
                 startColumn,
                 endLineNumber,
@@ -415,11 +543,25 @@ export default {
             }
         },
 
-        updateMarkers(editor, messages) {
-            const { monaco } = this
+        updateMarkers(editor, messages, storeMessageMap) {
+            const { monaco, editorMessageMap } = this
             const model = editor.getModel()
             const id = editor.getId()
-            const markers = messages.map(this.messageToMarker, this)
+
+            editorMessageMap.delete(model.uri)
+            const markers = []
+            let messageMap = null
+            if (storeMessageMap) {
+                messageMap = new Map()
+                editorMessageMap.set(model.uri, messageMap)
+            }
+            for (const message of messages) {
+                const marker = this.messageToMarker(message)
+                markers.push(marker)
+                if (storeMessageMap) {
+                    messageMap.set(computeKey(marker), message)
+                }
+            }
 
             monaco.editor.setModelMarkers(model, id, markers)
         },
@@ -454,6 +596,7 @@ export default {
             if (editor == null || linter == null) {
                 return
             }
+            this.editorMessageMap.clear()
             const model = editor.getModel()
             const code = model.getValue()
 
